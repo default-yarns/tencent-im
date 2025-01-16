@@ -10,8 +10,8 @@ package private
 import (
 	"errors"
 
-	"github.com/dobyte/tencent-im/internal/entity"
-	"github.com/dobyte/tencent-im/internal/types"
+	"github.com/default-yarns/tencent-im/internal/entity"
+	"github.com/default-yarns/tencent-im/internal/types"
 )
 
 var errNotSetMsgReceiver = errors.New("message receiver is not set")

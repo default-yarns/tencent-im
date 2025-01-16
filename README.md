@@ -16,8 +16,8 @@ package main
 import (
     "fmt"
     
-    "github.com/dobyte/tencent-im"
-    "github.com/dobyte/tencent-im/account"
+    "github.com/default-yarns/tencent-im"
+    "github.com/default-yarns/tencent-im/account"
 )
 
 func main() {

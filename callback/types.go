@@ -7,7 +7,7 @@
 
 package callback
 
-import "github.com/dobyte/tencent-im/internal/types"
+import "github.com/default-yarns/tencent-im/internal/types"
 
 type (
 	BaseResp struct {

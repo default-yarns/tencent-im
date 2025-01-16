@@ -10,9 +10,9 @@ package sns
 import (
 	"fmt"
 
-	"github.com/dobyte/tencent-im/internal/core"
-	"github.com/dobyte/tencent-im/internal/enum"
-	"github.com/dobyte/tencent-im/internal/types"
+	"github.com/default-yarns/tencent-im/internal/core"
+	"github.com/default-yarns/tencent-im/internal/enum"
+	"github.com/default-yarns/tencent-im/internal/types"
 )
 
 const (
