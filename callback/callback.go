@@ -8,6 +8,7 @@
 package callback
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -82,7 +83,7 @@ const (
 
 type (
 	Event            int
-	EventHandlerFunc func(ack Ack, data interface{})
+	EventHandlerFunc func(ctx context.Context, ack Ack, data interface{})
 	Options          struct {
 		SdkAppId int
 	}
@@ -155,7 +156,7 @@ func (c *callback) Listen(w http.ResponseWriter, r *http.Request) {
 		_ = a.AckFailure(err.Error())
 	} else {
 		if fn, ok := c.handlers[event]; ok {
-			fn(a, data)
+			fn(context.Background(), a, data)
 			return
 		} else {
 			_ = a.AckSuccess(ackSuccessCode)
