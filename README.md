@@ -5,7 +5,7 @@
 ## 如何使用
 
 ```shell script
-go get github.com/dobyte/tencent-im
+go get github.com/default-yarns/tencent-im
 ```
 
 ## 调用方法
