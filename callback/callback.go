@@ -9,12 +9,15 @@ package callback
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 )
 
 const (
@@ -74,11 +77,13 @@ const (
 	ackSuccessCode = 0
 	ackFailureCode = 1
 
-	queryAppId       = "SdkAppid"
-	queryCommand     = "CallbackCommand"
-	queryClientId    = "ClientIP"
-	queryOptPlatform = "OptPlatform"
-	queryContentType = "contenttype"
+	queryAppId           = "SdkAppid"
+	queryCommand         = "CallbackCommand"
+	querySignRequestTime = "RequestTime"
+	querySign            = "Sign"
+	queryClientId        = "ClientIP"
+	queryOptPlatform     = "OptPlatform"
+	queryContentType     = "contenttype"
 )
 
 type (
@@ -97,6 +102,7 @@ type (
 
 	callback struct {
 		appId    int
+		token    string
 		mu       sync.Mutex
 		handlers map[Event]EventHandlerFunc
 	}
@@ -115,11 +121,44 @@ type (
 	}
 )
 
-func NewCallback(appId int) Callback {
-	return &callback{
+func NewCallback(appId int, token ...string) Callback {
+	ca := &callback{
 		appId:    appId,
 		handlers: make(map[Event]EventHandlerFunc),
 	}
+	if len(token) > 0 {
+		ca.token = token[0]
+	}
+	return ca
+}
+
+// CallBackSignCheck 回调校验
+// 参照说明地址：https://cloud.tencent.com/document/product/269/32431#.E5.9F.BA.E7.A1.80.E5.9B.9E.E8.B0.83.E9.85.8D.E7.BD.AE?from_cn_redirect=1
+// 签名的算法为sha256(token + requestTime)
+func (c *callback) signCheck(sign string, requestTime int64, token string) error {
+	// 检查时间戳是否在有效期内(1分钟)
+	now := time.Now().Unix()
+	if abs(now-requestTime) >= 60 {
+		return errors.New("request time expired")
+	}
+	// 生成对比的签名
+	data := token + strconv.FormatInt(requestTime, 10)
+	hash := sha256.New()
+	hash.Write([]byte(data))
+	signStr := hex.EncodeToString(hash.Sum(nil))
+	// 对比签名是否一致
+	if sign != signStr {
+		return errors.New("invalid signature")
+	}
+	return nil
+}
+
+// abs 返回绝对值
+func abs(x int64) int64 {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
 
 // Register 注册事件
@@ -132,7 +171,28 @@ func (c *callback) Register(event Event, handler EventHandlerFunc) {
 // Listen 监听事件
 func (c *callback) Listen(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	a := newAck(w)
-
+	// 校验签名
+	if c.token != "" {
+		sign, ok := c.GetQuery(r, querySign)
+		if !ok {
+			_ = a.AckFailure("invalid sign")
+			return
+		}
+		requestTime, ok := c.GetQuery(r, querySignRequestTime)
+		if !ok {
+			_ = a.AckFailure("invalid request time")
+			return
+		}
+		requestTimeInt, err := strconv.ParseInt(requestTime, 10, 64)
+		if err != nil {
+			_ = a.AckFailure("parse request time err")
+			return
+		}
+		if err = c.signCheck(sign, requestTimeInt, c.token); err != nil {
+			_ = a.AckFailure(err.Error())
+			return
+		}
+	}
 	appId, ok := c.GetQuery(r, queryAppId)
 	if !ok || appId != strconv.Itoa(c.appId) {
 		_ = a.AckFailure("invalid sdk appId")
