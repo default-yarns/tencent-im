@@ -132,8 +132,8 @@ type (
 		CallbackCommand string           `json:"CallbackCommand"` // 回调命令
 		FromUserId      string           `json:"From_Account"`    // 消息发送者 UserID
 		ToUserId        string           `json:"To_Account"`      // 消息接收者 UserID
-		MsgSeq          int              `json:"MsgSeq"`          // 消息序列号，用于标记该条消息（32位无符号整数）
-		MsgRandom       int              `json:"MsgRandom"`       // 消息随机数，用于标记该条消息（32位无符号整数）
+		MsgSeq          uint32           `json:"MsgSeq"`          // 消息序列号，用于标记该条消息（32位无符号整数）
+		MsgRandom       uint32           `json:"MsgRandom"`       // 消息随机数，用于标记该条消息（32位无符号整数）
 		MsgTime         int64            `json:"MsgTime"`         // 消息的发送时间戳，单位为秒，单聊消息优先使用 MsgTime 进行排序，同一秒发送的消息则按 MsgSeq 排序，MsgSeq 值越大消息越靠后
 		MsgKey          string           `json:"MsgKey"`          // 该条消息的唯一标识，可根据该标识进行 REST API 撤回单聊消息
 		OnlineOnlyFlag  int              `json:"OnlineOnlyFlag"`  // 在线消息，为1，否则为0
@@ -153,8 +153,8 @@ type (
 		CallbackCommand string           `json:"CallbackCommand"` // 回调命令
 		FromUserId      string           `json:"From_Account"`    // 消息发送者 UserID
 		ToUserId        string           `json:"To_Account"`      // 消息接收者 UserID
-		MsgSeq          int              `json:"MsgSeq"`          // 消息序列号，用于标记该条消息（32位无符号整数）
-		MsgRandom       int              `json:"MsgRandom"`       // 消息随机数，用于标记该条消息（32位无符号整数）
+		MsgSeq          uint32           `json:"MsgSeq"`          // 消息序列号，用于标记该条消息（32位无符号整数）
+		MsgRandom       uint32           `json:"MsgRandom"`       // 消息随机数，用于标记该条消息（32位无符号整数）
 		MsgTime         int64            `json:"MsgTime"`         // 消息的发送时间戳，单位为秒，单聊消息优先使用 MsgTime 进行排序，同一秒发送的消息则按 MsgSeq 排序，MsgSeq 值越大消息越靠后
 		MsgKey          string           `json:"MsgKey"`          // 该条消息的唯一标识，可根据该标识进行 REST API 撤回单聊消息
 		OnlineOnlyFlag  int              `json:"OnlineOnlyFlag"`  // 在线消息，为1，否则为0
