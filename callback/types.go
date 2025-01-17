@@ -157,12 +157,14 @@ type (
 		MsgRandom       uint32           `json:"MsgRandom"`       // 消息随机数，用于标记该条消息（32位无符号整数）
 		MsgTime         int64            `json:"MsgTime"`         // 消息的发送时间戳，单位为秒，单聊消息优先使用 MsgTime 进行排序，同一秒发送的消息则按 MsgSeq 排序，MsgSeq 值越大消息越靠后
 		MsgKey          string           `json:"MsgKey"`          // 该条消息的唯一标识，可根据该标识进行 REST API 撤回单聊消息
+		MsgID           string           `json:"MsgID"`           // 该条消息在客户端唯一标识
 		OnlineOnlyFlag  int              `json:"OnlineOnlyFlag"`  // 在线消息，为1，否则为0
 		MsgBody         []*types.MsgBody `json:"MsgBody"`         // 消息体
 		CloudCustomData string           `json:"CloudCustomData"` // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到）
 		SendMsgResult   int              `json:"SendMsgResult"`   // 该条消息的下发结果，0表示下发成功，非0表示下发失败
 		ErrorInfo       string           `json:"ErrorInfo"`       // 该条消息下发失败的错误信息，若消息发送成功，则为"send msg succeed"
 		UnreadMsgNum    int              `json:"UnreadMsgNum"`    // To_Account 未读的单聊消息总数量（包含所有的单聊会话）。若该条消息下发失败（例如被脏字过滤），该字段值为-1
+		EventTime       int64            `json:"EventTime"`       // 事件触发的毫秒级别时间戳
 	}
 
 	// AfterPrivateMessageReport 单聊消息已读上报后回调
