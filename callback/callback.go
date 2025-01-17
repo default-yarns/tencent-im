@@ -92,7 +92,7 @@ type (
 		// Register 注册事件
 		Register(event Event, handler EventHandlerFunc)
 		// Listen 监听事件
-		Listen(w http.ResponseWriter, r *http.Request)
+		Listen(ctx context.Context, w http.ResponseWriter, r *http.Request)
 	}
 
 	callback struct {
@@ -130,7 +130,7 @@ func (c *callback) Register(event Event, handler EventHandlerFunc) {
 }
 
 // Listen 监听事件
-func (c *callback) Listen(w http.ResponseWriter, r *http.Request) {
+func (c *callback) Listen(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	a := newAck(w)
 
 	appId, ok := c.GetQuery(r, queryAppId)
@@ -156,7 +156,7 @@ func (c *callback) Listen(w http.ResponseWriter, r *http.Request) {
 		_ = a.AckFailure(err.Error())
 	} else {
 		if fn, ok := c.handlers[event]; ok {
-			fn(context.Background(), a, data)
+			fn(ctx, a, data)
 			return
 		} else {
 			_ = a.AckSuccess(ackSuccessCode)
