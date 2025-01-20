@@ -9,6 +9,18 @@ package callback
 
 import "github.com/default-yarns/tencent-im/internal/types"
 
+const (
+	TIMTextElem      = "TIMTextElem"      // 文本消息
+	TIMLocationElem  = "TIMLocationElem"  // 地理位置消息
+	TIMFaceElem      = "TIMFaceElem"      // 表情消息
+	TIMCustomElem    = "TIMCustomElem"    // 自定义消息
+	TIMSoundElem     = "TIMSoundElem"     // 语音消息
+	TIMImageElem     = "TIMImageElem"     // 图像消息
+	TIMFileElem      = "TIMFileElem"      // 文件消息
+	TIMVideoFileElem = "TIMVideoFileElem" // 视频文件消息
+	TIMRelayElem     = "TIMRelayElem"     // 转发消息
+)
+
 type (
 	BaseResp struct {
 		ErrorCode    int    `json:"ErrorCode"`
