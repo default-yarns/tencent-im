@@ -111,7 +111,7 @@ func (m *Message) GetStatus() MsgStatus {
 // SetForbidBeforeSendMsgCallback 设置禁止发消息前回调
 func (m *Message) SetForbidBeforeSendMsgCallback() {
 	if m.callbackControls == nil {
-		m.callbackControls = make(map[string]bool, 0)
+		m.callbackControls = make(map[string]bool)
 	}
 	m.callbackControls["ForbidBeforeSendMsgCallback"] = true
 }
@@ -119,7 +119,7 @@ func (m *Message) SetForbidBeforeSendMsgCallback() {
 // SetForbidAfterSendMsgCallback 设置禁止发消息后回调
 func (m *Message) SetForbidAfterSendMsgCallback() {
 	if m.callbackControls == nil {
-		m.callbackControls = make(map[string]bool, 0)
+		m.callbackControls = make(map[string]bool)
 	}
 	m.callbackControls["ForbidAfterSendMsgCallback"] = true
 }
@@ -141,7 +141,7 @@ func (m *Message) GetForbidCallbackControl() (controls []string) {
 // SetNoUnread 设置该条消息不计入未读数
 func (m *Message) SetNoUnread() {
 	if m.sendControls == nil {
-		m.sendControls = make(map[string]bool, 0)
+		m.sendControls = make(map[string]bool)
 	}
 	m.sendControls["NoUnread"] = true
 }
@@ -149,7 +149,7 @@ func (m *Message) SetNoUnread() {
 // SetNoLastMsg 设置该条消息不更新会话列表
 func (m *Message) SetNoLastMsg() {
 	if m.sendControls == nil {
-		m.sendControls = make(map[string]bool, 0)
+		m.sendControls = make(map[string]bool)
 	}
 	m.sendControls["NoLastMsg"] = true
 }

@@ -58,6 +58,7 @@ type (
 		AppSecret  string // 密钥信息，可在即时通信 IM 控制台 的应用详情页面中获取，具体操作请参见 获取密钥
 		UserId     string // 用户ID
 		Expiration int    // UserSig过期时间
+		Token      string // 用户回调鉴权凭证
 	}
 
 	UserSig struct {
@@ -206,7 +207,7 @@ func (i *im) RecentContact() recentcontact.API {
 // Callback 获取回调接口
 func (i *im) Callback() callback.Callback {
 	i.callback.once.Do(func() {
-		i.callback.instance = callback.NewCallback(i.opt.AppId)
+		i.callback.instance = callback.NewCallback(i.opt.AppId, i.opt.Token)
 	})
 	return i.callback.instance
 }
